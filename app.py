@@ -9,6 +9,7 @@ from sentence_transformers import SentenceTransformer
 import faiss
 from openai import OpenAI
 
+st.set_page_config(page_title="Financial Document AI Assistant", layout="wide")
 # -----------------------------
 # 1. Load API key
 # -----------------------------
@@ -298,9 +299,9 @@ Document Content:
 # -----------------------------
 # 13. Streamlit UI
 # -----------------------------
-st.set_page_config(page_title="Multi-PDF RAG Assistant", layout="wide")
+#st.set_page_config(page_title="Financial Document AI Assistant", layout="wide")
 st.image("header.png", use_container_width=True)
-#st.title("Multi-PDF RAG Assistant")
+#st.title("Financial Document AI Assistant")
 st.markdown(
     """
     Upload one or more PDF documents and ask questions grounded in their content.
