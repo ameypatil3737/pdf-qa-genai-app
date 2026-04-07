@@ -12,11 +12,15 @@ from openai import OpenAI
 # -----------------------------
 # 1. Load API key
 # -----------------------------
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+import os
+import streamlit as st
+from openai import OpenAI
+
+# Try Streamlit secrets first, fallback to env (for local)
+api_key = st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
 
 if not api_key:
-    st.error("OPENAI_API_KEY not found in .env file.")
+    st.error("OPENAI_API_KEY not found. Please add it in Streamlit Secrets.")
     st.stop()
 
 client = OpenAI(api_key=api_key)
