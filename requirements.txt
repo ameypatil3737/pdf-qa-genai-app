@@ -1,4 +1,4 @@
-# 🚀 Multi-PDF RAG Assistant
+# 🚀 Financial Document AI Assistant
 
 > AI-powered document intelligence system for querying and summarizing multiple PDFs with source attribution
 
@@ -6,7 +6,7 @@
 
 ## 📌 Overview
 
-**Multi-PDF RAG Assistant** is a Retrieval-Augmented Generation (RAG) application that enables users to upload documents and ask context-aware questions with precise source references.
+**MFinancial Document AI Assistant** is a Retrieval-Augmented Generation (RAG) application that enables users to upload documents and ask context-aware questions with precise source references.
 
 Built to simulate real-world use cases such as:
 
