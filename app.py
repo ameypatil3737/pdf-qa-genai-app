@@ -318,6 +318,17 @@ with col1:
         st.session_state.document_summary = ""
         st.rerun()
 
+
+ with st.sidebar:
+        st.header("About this app")
+        st.write(
+            "This is a multi-PDF RAG application built using Streamlit, FAISS, "
+            "Sentence Transformers, and OpenAI."
+        )
+        st.markdown("---")
+        st.write("**Built by:** Amey Anant Patil")
+        st.write("GenAI Enthusiast")
+
 if uploaded_files:
     current_signature = get_files_signature(uploaded_files)
 
@@ -343,8 +354,8 @@ if uploaded_files:
         st.write(f"Total pages: {len(document_pages)}")
         st.write(f"Total chunks: {len(chunks)}")
         st.markdown("---")
-        st.write("**Built by:** Amey Patil")
-        st.write("Vice President – Analytics | GenAI Enthusiast")
+        st.write("**Built by:** Amey Anant Patil")
+        st.write("GenAI Enthusiast")
 
     if not document_pages:
         st.warning("No readable text was found in the uploaded PDF documents.")
