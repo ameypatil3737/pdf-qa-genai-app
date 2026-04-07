@@ -295,8 +295,8 @@ Document Content:
 # 13. Streamlit UI
 # -----------------------------
 st.set_page_config(page_title="Multi-PDF RAG Assistant", layout="wide")
-
-st.title("Multi-PDF RAG Assistant")
+st.image("header.png", use_container_width=True)
+#st.title("Multi-PDF RAG Assistant")
 st.markdown(
     """
     Upload one or more PDF documents and ask questions grounded in their content.
