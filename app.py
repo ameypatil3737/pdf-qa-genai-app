@@ -300,7 +300,7 @@ Document Content:
 # 13. Streamlit UI
 # -----------------------------
 #st.set_page_config(page_title="Financial Document AI Assistant", layout="wide")
-st.image("header.png", width="stretch")
+st.image("header.png")
 #st.title("Financial Document AI Assistant")
 st.markdown(
     """
