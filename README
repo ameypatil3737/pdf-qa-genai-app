@@ -1,0 +1,20 @@
+# Multi-PDF RAG Assistant
+
+A Streamlit-based GenAI application that allows users to upload one or more PDF documents, ask natural language questions, and receive answers grounded only in the uploaded content.
+
+## Features
+- Multi-PDF upload
+- Semantic search using Sentence Transformers
+- FAISS vector retrieval
+- OpenAI-based answer generation
+- Page-level source citations
+- Document summarization
+- Cached indexing for faster reuse
+
+## Tech Stack
+- Python
+- Streamlit
+- Sentence Transformers
+- FAISS
+- OpenAI API
+- PyPDF
