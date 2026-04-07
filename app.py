@@ -319,15 +319,15 @@ with col1:
         st.rerun()
 
 
- with st.sidebar:
-        st.header("About this app")
-        st.write(
-            "This is a multi-PDF RAG application built using Streamlit, FAISS, "
-            "Sentence Transformers, and OpenAI."
-        )
-        st.markdown("---")
-        st.write("**Built by:** Amey Anant Patil")
-        st.write("GenAI Enthusiast")
+with st.sidebar:
+    st.header("About this app")
+    st.write(
+        "This is a multi-PDF RAG application built using Streamlit, FAISS, "
+        "Sentence Transformers, and OpenAI."
+    )
+    st.markdown("---")
+    st.write("**Built by:** Amey Anant Patil")
+    st.write("GenAI Enthusiast")
 
 if uploaded_files:
     current_signature = get_files_signature(uploaded_files)
@@ -343,19 +343,12 @@ if uploaded_files:
         document_pages, chunks, index = process_documents_cached(tuple(file_data))
 
     with st.sidebar:
-        st.header("About this app")
-        st.write(
-            "This is a multi-PDF RAG application built using Streamlit, FAISS, "
-            "Sentence Transformers, and OpenAI."
-        )
 
         st.subheader("Document Stats")
         st.write(f"Files uploaded: {len(uploaded_files)}")
         st.write(f"Total pages: {len(document_pages)}")
         st.write(f"Total chunks: {len(chunks)}")
-        st.markdown("---")
-        st.write("**Built by:** Amey Anant Patil")
-        st.write("GenAI Enthusiast")
+
 
     if not document_pages:
         st.warning("No readable text was found in the uploaded PDF documents.")
