@@ -1,20 +1,188 @@
-# Multi-PDF RAG Assistant
+# 🚀 Financial Document AI Assistant
 
-A Streamlit-based GenAI application that allows users to upload one or more PDF documents, ask natural language questions, and receive answers grounded only in the uploaded content.
+> AI-powered document intelligence system for querying and summarizing multiple PDFs with source attribution
 
-## Features
-- Multi-PDF upload
-- Semantic search using Sentence Transformers
-- FAISS vector retrieval
-- OpenAI-based answer generation
-- Page-level source citations
-- Document summarization
-- Cached indexing for faster reuse
+---
 
-## Tech Stack
-- Python
-- Streamlit
-- Sentence Transformers
-- FAISS
-- OpenAI API
-- PyPDF
+## 📌 Overview
+
+**MFinancial Document AI Assistant** is a Retrieval-Augmented Generation (RAG) application that enables users to upload documents and ask context-aware questions with precise source references.
+
+Built to simulate real-world use cases such as:
+
+* financial report analysis
+* research document intelligence
+* policy and compliance review
+
+---
+
+## ✨ Key Features
+
+* 📄 Upload and process PDF documents
+* 🔍 Context-aware question answering
+* 🧠 Embedding-based semantic search (FAISS)
+* 📑 Page-level source attribution
+* 📝 Document summarization
+* 💬 Chat history tracking
+* ⚡ Fast local processing (except LLM call)
+
+---
+
+## 🧠 How It Works (RAG Pipeline)
+
+User Question
+↓
+Embedding (Sentence Transformer)
+↓
+FAISS Vector Search
+↓
+Top Relevant Chunks Retrieved
+↓
+LLM (OpenAI) → Answer Generation
+↓
+Answer + Source Pages Returned
+
+---
+
+## 🏗️ Architecture
+
+* **Frontend:** Streamlit
+* **Embedding Model:** SentenceTransformers (MiniLM)
+* **Vector Store:** FAISS
+* **LLM:** OpenAI (GPT-4o-mini)
+* **Processing:** Python
+
+---
+
+## 🛠️ Tech Stack
+
+* Python
+* Streamlit
+* PyPDF
+* Sentence Transformers
+* FAISS
+* OpenAI API
+* NumPy
+* Python Dotenv
+
+---
+
+## 📂 Project Structure
+
+app.py
+.env
+README.md
+requirements.txt
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone repository
+
+git clone <your-repo-link>
+cd <your-project-folder>
+
+### 2. Create environment
+
+python -m venv venv
+
+### 3. Activate
+
+Mac / Linux:
+source venv/bin/activate
+
+Windows:
+venv\Scripts\activate
+
+### 4. Install dependencies
+
+pip install -r requirements.txt
+
+### 5. Add API key
+
+Create `.env` file:
+
+OPENAI_API_KEY=your_api_key_here
+
+### 6. Run app
+
+streamlit run app.py
+
+---
+
+## 📸 Demo (Add Screenshots Here)
+
+* Upload PDF screen
+* Q&A output with sources
+* Summary output
+
+---
+
+## 📊 Example Output
+
+**Question:** What are the key risks in the document?
+
+**Answer:**
+
+* Market volatility impacting revenue
+* Regulatory changes
+* Operational risks
+
+**Sources:**
+
+* Annual_Report.pdf — Page 12
+* Investor_Presentation.pdf — Page 8
+
+---
+
+## 🎯 Real-World Use Cases
+
+* 📈 Financial Statement Analysis
+* 🧾 Equity Research Reports
+* 📚 Knowledge Base Search
+* ⚖️ Legal Document Review
+* 🏢 Internal Business Documents
+
+---
+
+## 🚧 Current Limitations
+
+* Character-based chunking
+* No table extraction yet
+* No confidence scoring
+* Limited summarization scope
+
+---
+
+## 🔮 Future Enhancements
+
+* Multi-PDF support (in progress)
+* Smart predefined questions
+* Table extraction (Camelot / pdfplumber)
+* Paragraph-based chunking
+* Confidence scoring
+* Financial-specific insights extraction
+
+---
+
+## 💡 Key Learning Outcomes
+
+* Built end-to-end RAG pipeline
+* Implemented vector search using FAISS
+* Designed LLM prompt for grounded answers
+* Managed document chunking and embeddings
+* Created interactive UI using Streamlit
+
+---
+
+## 🧑‍💻 Author
+
+**Amey Patil**
+Finance + Analytics + GenAI
+
+---
+
+## ⭐ If you like this project
+
+Give it a star ⭐ — it helps visibility!
