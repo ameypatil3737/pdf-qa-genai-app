@@ -305,18 +305,18 @@ st.markdown(
     """
 )
 
+uploaded_files = st.file_uploader(
+    "Upload PDF documents",
+    type=["pdf"],
+    accept_multiple_files=True,
+)
+
 col1, col2 = st.columns([1, 5])
 with col1:
     if st.button("Clear Chat"):
         st.session_state.chat_history = []
         st.session_state.document_summary = ""
         st.rerun()
-
-uploaded_files = st.file_uploader(
-    "Upload PDF documents",
-    type=["pdf"],
-    accept_multiple_files=True,
-)
 
 if uploaded_files:
     current_signature = get_files_signature(uploaded_files)
@@ -330,6 +330,21 @@ if uploaded_files:
 
     with st.spinner("Processing uploaded documents..."):
         document_pages, chunks, index = process_documents_cached(tuple(file_data))
+
+    with st.sidebar:
+        st.header("About this app")
+        st.write(
+            "This is a multi-PDF RAG application built using Streamlit, FAISS, "
+            "Sentence Transformers, and OpenAI."
+        )
+
+        st.subheader("Document Stats")
+        st.write(f"Files uploaded: {len(uploaded_files)}")
+        st.write(f"Total pages: {len(document_pages)}")
+        st.write(f"Total chunks: {len(chunks)}")
+        st.markdown("---")
+        st.write("**Built by:** Amey Patil")
+        st.write("Vice President – Analytics | GenAI Enthusiast")
 
     if not document_pages:
         st.warning("No readable text was found in the uploaded PDF documents.")
@@ -371,7 +386,6 @@ if uploaded_files:
                 "sources": relevant_chunks,
             }
         )
-
 # -----------------------------
 # 14. Display chat history
 # -----------------------------
@@ -398,8 +412,8 @@ if st.session_state.chat_history:
                     )
 
             if unique_source_labels:
-                st.markdown("**Sources**")
+                st.markdown("**Retrieved Source Pages**")
                 for source_label in unique_source_labels:
-                    st.write(f"• {source_label}")
+                    st.info(source_label)
 
             st.markdown("---")
