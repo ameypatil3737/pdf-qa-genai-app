@@ -16,7 +16,7 @@ load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
 
 if not api_key:
-    st.error("OPENAI_API_KEY not found in .env file.")
+    st.error("OPENAI_API_KEY not found in .env file")
     st.stop()
 
 client = OpenAI(api_key=api_key)
@@ -46,7 +46,9 @@ embedding_model = load_embedding_model()
 # 4. Utility: make file signature
 # -----------------------------
 def get_files_signature(uploaded_files):
-    signature_text = "||".join([f"{file.name}_{file.size}" for file in uploaded_files])
+    signature_text = "||".join(
+        [f"{file.name}_{file.size}" for file in uploaded_files]
+    )
     return hashlib.md5(signature_text.encode()).hexdigest()
 
 # -----------------------------
@@ -59,13 +61,11 @@ def extract_text_from_pdf(pdf_file_path, file_name):
     for page_number, page in enumerate(reader.pages, start=1):
         page_text = page.extract_text()
         if page_text and page_text.strip():
-            pages.append(
-                {
-                    "file_name": file_name,
-                    "page_number": page_number,
-                    "text": page_text.strip(),
-                }
-            )
+            pages.append({
+                "file_name": file_name,
+                "page_number": page_number,
+                "text": page_text.strip()
+            })
 
     return pages
 
@@ -88,13 +88,11 @@ def chunk_text(pages, chunk_size=1000, overlap=100):
             chunk = text[start:end].strip()
 
             if chunk:
-                chunks.append(
-                    {
-                        "file_name": file_name,
-                        "page_number": page_number,
-                        "text": chunk,
-                    }
-                )
+                chunks.append({
+                    "file_name": file_name,
+                    "page_number": page_number,
+                    "text": chunk
+                })
 
             start += chunk_size - overlap
 
@@ -173,20 +171,13 @@ def retrieve_relevant_chunks(question, chunks, index, top_k=8, final_k=5):
 # 11. Ask LLM
 # -----------------------------
 def ask_llm(question, context_chunks):
-    not_found_message = (
-        "I could not find the answer in the uploaded documents. "
-        "Please try rephrasing your question or ask something more specific."
-    )
-
     if not context_chunks:
-        return not_found_message
+        return "I could not find the answer in the document. Please try rephrasing your question or ask something more specific."
 
-    context = "\n\n".join(
-        [
-            f"(File: {chunk['file_name']} | Page {chunk['page_number']}) {chunk['text']}"
-            for chunk in context_chunks
-        ]
-    )
+    context = "\n\n".join([
+        f"(File: {chunk['file_name']} | Page {chunk['page_number']}) {chunk['text']}"
+        for chunk in context_chunks
+    ])
 
     source_items = []
     seen_sources = set()
@@ -200,18 +191,18 @@ def ask_llm(question, context_chunks):
     sources_str = "; ".join(source_items)
 
     prompt = f"""
-You are a professional multi-document assistant.
+You are a helpful document assistant.
 
-Answer the user's question using only the provided document context.
+Answer the user's question only from the context below.
 
 Rules:
-1. Use only the uploaded document context.
-2. Do not make up or assume anything.
-3. If the answer is not present, say exactly:
-   "{not_found_message}"
-4. Keep the answer clear, concise, and professional.
-5. Use short bullet points where helpful.
-6. At the end, always add:
+1. Do not make up anything.
+2. If the answer is not present in the context, say exactly:
+   "I could not find the answer in the document. Please try rephrasing your question or ask something more specific."
+3. Answer in simple and clear language.
+4. Use short bullet points wherever possible.
+5. Keep the answer concise and factual.
+6. At the end of the answer, always add:
    Source: {sources_str}
 
 Context:
@@ -226,14 +217,14 @@ Question:
         messages=[
             {
                 "role": "system",
-                "content": "You answer questions only from provided uploaded document context.",
+                "content": "You answer questions only from provided document context."
             },
             {
                 "role": "user",
-                "content": prompt,
-            },
+                "content": prompt
+            }
         ],
-        temperature=0,
+        temperature=0
     )
 
     answer = response.choices[0].message.content.strip()
@@ -248,27 +239,25 @@ Question:
 # -----------------------------
 def summarize_document(chunks, max_chunks=10):
     if not chunks:
-        return "No readable content found in the uploaded documents."
+        return "No readable content found to summarize."
 
     selected_chunks = chunks[:max_chunks]
-    context = "\n\n".join(
-        [
-            f"(File: {chunk['file_name']} | Page {chunk['page_number']}) {chunk['text']}"
-            for chunk in selected_chunks
-        ]
-    )
+    context = "\n\n".join([
+        f"(File: {chunk['file_name']} | Page {chunk['page_number']}) {chunk['text']}"
+        for chunk in selected_chunks
+    ])
 
     prompt = f"""
-You are a professional document assistant.
+You are a helpful document assistant.
 
-Summarize the uploaded documents using only the content below.
+Summarize the document clearly and simply using only the content below.
 
 Rules:
 1. Do not make up anything.
-2. Keep the summary simple and professional.
+2. Keep the summary easy to understand.
 3. Use short bullet points.
-4. Mention the main topics covered.
-5. If multiple files are uploaded, mention file names where relevant.
+4. Mention the main topics covered in the document.
+5. If multiple files are uploaded, mention the file names where relevant.
 
 Document Content:
 {context}
@@ -279,14 +268,14 @@ Document Content:
         messages=[
             {
                 "role": "system",
-                "content": "You summarize documents only from provided content.",
+                "content": "You summarize documents only from provided content."
             },
             {
                 "role": "user",
-                "content": prompt,
-            },
+                "content": prompt
+            }
         ],
-        temperature=0,
+        temperature=0
     )
 
     return response.choices[0].message.content.strip()
@@ -294,28 +283,17 @@ Document Content:
 # -----------------------------
 # 13. Streamlit UI
 # -----------------------------
-st.set_page_config(page_title="Multi-PDF RAG Assistant", layout="wide")
+st.set_page_config(page_title="PDF Q&A App", layout="wide")
+st.title("AI Document Question Answering Assistant")
 
-st.title("Multi-PDF RAG Assistant")
-st.markdown(
-    """
-    Upload one or more PDF documents and ask questions grounded in their content.
-
-    **Note:** Answers are generated only from uploaded documents.
-    """
-)
-
-col1, col2 = st.columns([1, 5])
-with col1:
-    if st.button("Clear Chat"):
-        st.session_state.chat_history = []
-        st.session_state.document_summary = ""
-        st.rerun()
+if st.button("Clear Chat History"):
+    st.session_state.chat_history = []
+    st.rerun()
 
 uploaded_files = st.file_uploader(
-    "Upload PDF documents",
+    "Upload one or more PDFs",
     type=["pdf"],
-    accept_multiple_files=True,
+    accept_multiple_files=True
 )
 
 if uploaded_files:
@@ -328,78 +306,91 @@ if uploaded_files:
 
     file_data = [(file.name, file.getvalue()) for file in uploaded_files]
 
-    with st.spinner("Processing uploaded documents..."):
+    with st.spinner("Reading, chunking, and indexing PDFs..."):
         document_pages, chunks, index = process_documents_cached(tuple(file_data))
 
     if not document_pages:
-        st.warning("No readable text was found in the uploaded PDF documents.")
+        st.warning("No readable text found in the uploaded PDF(s).")
         st.stop()
 
-    st.subheader("Uploaded Documents")
-    for file in uploaded_files:
-        st.write(f"• {file.name}")
+    st.success("PDF(s) processed successfully.")
 
-    col1, col2 = st.columns([1, 4])
-    with col1:
-        if st.button("Summarize Documents"):
-            with st.spinner("Generating summary..."):
-                st.session_state.document_summary = summarize_document(chunks)
+    st.markdown("**Uploaded Files:**")
+    for file in uploaded_files:
+        st.write(f"- {file.name}")
+
+    if st.button("Summarize Document(s)"):
+        with st.spinner("Summarizing document(s)..."):
+            st.session_state.document_summary = summarize_document(chunks)
 
     if st.session_state.document_summary:
         st.subheader("Document Summary")
         st.markdown(st.session_state.document_summary)
 
     with st.form("question_form", clear_on_submit=True):
-        question = st.text_input("Ask a question from the uploaded documents")
+        question = st.text_input("Ask a question from the uploaded PDF(s):")
         submit_button = st.form_submit_button("Ask")
 
     if submit_button and question and question.strip():
-        with st.spinner("Generating answer..."):
+        with st.spinner("Finding answer..."):
             relevant_chunks = retrieve_relevant_chunks(
                 question=question,
                 chunks=chunks,
                 index=index,
                 top_k=8,
-                final_k=5,
+                final_k=5
             )
             answer = ask_llm(question, relevant_chunks)
 
-        st.session_state.chat_history.append(
-            {
-                "question": question,
-                "answer": answer,
-                "sources": relevant_chunks,
-            }
-        )
+        st.session_state.chat_history.append({
+            "question": question,
+            "answer": answer,
+            "sources": relevant_chunks
+        })
 
 # -----------------------------
 # 14. Display chat history
 # -----------------------------
 if st.session_state.chat_history:
-    st.subheader("Conversation")
+    st.subheader("Chat History")
 
     for i, chat in enumerate(st.session_state.chat_history, start=1):
-        with st.container():
-            st.markdown(f"**Question {i}**")
-            st.write(chat["question"])
+        st.markdown(f"### Question {i}")
+        st.write(chat["question"])
 
-            st.markdown("**Answer**")
-            st.markdown(chat["answer"])
+        st.markdown("**Answer:**")
+        st.markdown(chat["answer"])
 
-            unique_source_labels = []
-            seen_sources = set()
+        unique_source_labels = []
+        seen_sources = set()
 
-            for chunk in chat["sources"]:
-                source_key = (chunk["file_name"], chunk["page_number"])
-                if source_key not in seen_sources:
-                    seen_sources.add(source_key)
-                    unique_source_labels.append(
-                        f"{chunk['file_name']} - Page {chunk['page_number']}"
-                    )
+        for chunk in chat["sources"]:
+            source_key = (chunk["file_name"], chunk["page_number"])
+            if source_key not in seen_sources:
+                seen_sources.add(source_key)
+                unique_source_labels.append(f"{chunk['file_name']} - Page {chunk['page_number']}")
 
-            if unique_source_labels:
-                st.markdown("**Sources**")
-                for source_label in unique_source_labels:
-                    st.write(f"• {source_label}")
+        st.markdown("**Sources Used:**")
+        for source_label in unique_source_labels:
+            st.write(f"- {source_label}")
 
-            st.markdown("---")
+        with st.expander(f"See retrieved chunks for Question {i}"):
+            displayed_chunk_keys = set()
+
+            for j, chunk in enumerate(chat["sources"], start=1):
+                chunk_key = (
+                    chunk["file_name"],
+                    chunk["page_number"],
+                    chunk["text"][:200]
+                )
+
+                if chunk_key in displayed_chunk_keys:
+                    continue
+
+                displayed_chunk_keys.add(chunk_key)
+
+                st.markdown(
+                    f"**Chunk {j} | File: {chunk['file_name']} | Page {chunk['page_number']}**"
+                )
+                st.write(chunk["text"])
+                st.markdown("---")
