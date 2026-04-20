@@ -1,8 +1,9 @@
 # 🚀 Financial Document AI Assistant
-## Strategy Performance Visualizations
+## 📊 Strategy Performance Visualization
 
-![Image](./App_Image.png)
-
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ameypatil3737/pdf-qa-genai-app/main/App_Image.png" width="900"/>
+</p>
 ---
 > AI-powered document intelligence system for querying and summarizing multiple PDFs with source attribution
 
